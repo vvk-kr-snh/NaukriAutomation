@@ -1,0 +1,50 @@
+cat > ~/Library/LaunchAgents/com.naukri.automation.plist <<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+ "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.naukri.automation</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/opt/anaconda3/bin/python3</string>
+        <string>$HOME/Downloads/Naukri_automation_common.py</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>$HOME/Downloads</string>
+
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>9</integer>
+        <key>Minute</key>
+        <integer>0</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>$HOME/Downloads/naukri_log.txt</string>
+
+    <key>StandardErrorPath</key>
+    <string>$HOME/Downloads/naukri_error.txt</string>
+</dict>
+</plist>
+EOF
+
+--------------------------------------------------------
+
+launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.naukri.automation.plist
+
+--------------------------------------------------------
+
+launchctl kickstart -k gui/$(id -u)/com.naukri.automation
+
+--------------------if your system is not awake------------------------------------
+
+sudo pmset repeat wakeorpoweron MTWRFSU 08:55:00
+
+--------------------to check if the schedule is already set------------------------------------
+
+pmset -g sched
